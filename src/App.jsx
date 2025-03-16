@@ -4,6 +4,7 @@ import LoginPage from './screens/auth/pages/LoginPage';
 import FamilySetupPage from './screens/family/pages/FamilySetupPage';
 import DashboardPage from './screens/dashboard/pages/DashboardPage';
 import TransactionsPage from './screens/transactions/pages/TransactionsPage';
+import CategoryPage from './screens/categories/pages/CategoryPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route path="/family-setup" element={<FamilySetupPage />} />
           <Route path='/dashboard' element={<DashboardPage />} />
           <Route path="/transactions" element={<TransactionsPage />} />
+          <Route path="/categories" element={<CategoryPage />} />
           <Route path="/" element={<Navigate to="/signup" replace />} />
         </Routes>
       </main>
