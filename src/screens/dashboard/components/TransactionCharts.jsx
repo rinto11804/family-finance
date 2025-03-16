@@ -113,13 +113,13 @@ const TransactionCharts = () => {
                             <Bar
                                 dataKey="income"
                                 name="Income"
-                                fill="hsl(var(--su))"
+                                fill="var(--color-success)"
                                 radius={[4, 4, 0, 0]}
                             />
                             <Bar
                                 dataKey="expense"
                                 name="Expense"
-                                fill="hsl(var(--er))"
+                                fill="var(--color-error)"
                                 radius={[4, 4, 0, 0]}
                             />
                         </BarChart>
