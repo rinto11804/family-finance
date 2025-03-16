@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import DashboardHeader from '../components/DashboardHeader';
 import IncomeStats from '../components/IncomeStats';
 import FamilyMembers from '../components/FamilyMembers';
-import TransactionsList from '../components/TransactionsList';
 import CalendarEvents from '../components/CalendarEvents';
-import TransactionCharts from '../components/TransactionCharts';
 import DashboardLayout from '../../../components/layout/DashboardLayout';
 
 const DashboardPage = () => {
@@ -84,25 +82,16 @@ const DashboardPage = () => {
                 <DashboardHeader familyName={familyData.familyName} />
 
                 <div className="space-y-8">
-                    {/* Income Statistics Section */}
                     <section>
                         <h2 className="text-xl font-semibold mb-4">Financial Overview</h2>
                         <IncomeStats stats={familyData.stats} />
                     </section>
 
-                    {/* Main Content Grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Left Column - Transactions */}
                         <div className="lg:col-span-2 space-y-8">
-                            <TransactionCharts />
-                            <TransactionsList
-                                transactions={familyData.transactions}
-                                onAddTransaction={handleAddTransaction}
-                            />
                             <CalendarEvents />
                         </div>
 
-                        {/* Right Column - Family Members */}
                         <div className="lg:col-span-1">
                             <FamilyMembers members={familyData.members} />
                         </div>
