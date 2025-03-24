@@ -7,19 +7,18 @@ import DashboardLayout from '../../../components/layout/DashboardLayout';
 
 const DashboardPage = () => {
     const [familyData, setFamilyData] = useState({
-        familyName: "Smith Family",
+        familyName: "Family",
         stats: {
-            monthlyIncome: "₹82,500",
-            monthlyExpenses: "₹48,900",
-            totalSavings: "₹2,35,000",
+            monthlyIncome: "₹40,500",
+            monthlyExpenses: "₹8,900",
             incomeChange: 12,
             expenseChange: -8,
             savingsChange: 23
         },
         members: [
-            { name: "John Smith", role: "Family Head", income: "₹50,000" },
-            { name: "Sarah Smith", role: "Member", income: "₹32,500" },
-            { name: "Mike Smith", role: "Member", income: "₹28,000" }
+            { name: "John Smith", role: "Family Head", income: "10,000" },
+            { name: "Sarah Smith", role: "Member", income: "₹12,500" },
+            { name: "Mike Smith", role: "Member", income: "₹18,000" }
         ],
         transactions: [
             {
@@ -31,7 +30,7 @@ const DashboardPage = () => {
             },
             {
                 title: "Rent Payment",
-                amount: "-₹12,000",
+                amount: "-₹2,000",
                 date: "Yesterday",
                 category: "Housing",
                 type: "expense"

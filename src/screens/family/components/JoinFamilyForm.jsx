@@ -1,6 +1,28 @@
-import { HiKey, HiLockClosed, HiUser } from 'react-icons/hi';
+import { useState } from 'react';
+import { HiKey, HiMail } from 'react-icons/hi';
 
-const JoinFamilyForm = ({ familyCode, setFamilyCode, onSubmit }) => {
+const JoinFamilyForm = ({ onSubmit, loading }) => {
+    const [formData, setFormData] = useState({
+        email: '',
+        familyCode: ''
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit({
+            email: formData.email,
+            familyCode: formData.familyCode.trim().toUpperCase()
+        });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
     return (
         <div className="card bg-base-100 shadow-lg w-full max-w-xl mx-auto h-fit max-h-[95vh] overflow-y-auto">
             <div className="card-body p-6 sm:p-8 md:px-12 md:py-10">
@@ -21,20 +43,24 @@ const JoinFamilyForm = ({ familyCode, setFamilyCode, onSubmit }) => {
                 </div>
 
                 {/* Form Section */}
-                <form onSubmit={onSubmit} className="space-y-4 md:space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                     <div className="form-control w-full">
                         <label className="label px-1 pb-1">
-                            <span className="label-text text-sm md:text-base font-medium">Your Name</span>
+                            <span className="label-text text-sm md:text-base font-medium">Your Email</span>
                         </label>
                         <div className="join w-full">
                             <span className="join-item bg-base-200 px-3 md:px-5 flex items-center">
-                                <HiUser className="h-4 w-4 md:h-5 md:w-5 text-base-content/70" />
+                                <HiMail className="h-4 w-4 md:h-5 md:w-5 text-base-content/70" />
                             </span>
                             <input
-                                type="text"
-                                placeholder="Enter your full name"
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="Enter your email"
                                 className="join-item input input-bordered w-full h-11 md:h-14"
                                 required
+                                disabled={loading}
                             />
                         </div>
                     </div>
@@ -43,24 +69,31 @@ const JoinFamilyForm = ({ familyCode, setFamilyCode, onSubmit }) => {
                         <label className="label px-1 pb-1">
                             <span className="label-text text-sm md:text-base font-medium">Family Code</span>
                         </label>
-                        <div className="grid grid-cols-6 gap-2 md:gap-4">
-                            {[0, 1, 2, 3, 4, 5].map((index) => (
-                                <input
-                                    key={index}
-                                    type="text"
-                                    maxLength="1"
-                                    className="input input-bordered w-full h-12 md:h-16 text-center text-xl md:text-2xl font-mono uppercase bg-base-100"
-                                    placeholder="●"
-                                    required
-                                />
-                            ))}
+                        <div className="join w-full">
+                            <span className="join-item bg-base-200 px-3 md:px-5 flex items-center">
+                                <HiKey className="h-4 w-4 md:h-5 md:w-5 text-base-content/70" />
+                            </span>
+                            <input
+                                type="text"
+                                name="familyCode"
+                                value={formData.familyCode}
+                                onChange={handleChange}
+                                placeholder="Enter 6-digit family code"
+                                className="join-item input input-bordered w-full h-11 md:h-14 font-mono uppercase"
+                                maxLength="6"
+                                required
+                                disabled={loading}
+                            />
                         </div>
-
                     </div>
 
                     <div className="divider my-4 md:my-6"></div>
 
-                    <button type="submit" className="btn btn-primary w-full h-11 md:h-14 gap-2 text-sm md:text-base normal-case">
+                    <button 
+                        type="submit" 
+                        className={`btn btn-primary w-full h-11 md:h-14 gap-2 text-sm md:text-base normal-case ${loading ? 'loading' : ''}`}
+                        disabled={loading}
+                    >
                         <HiKey className="h-4 w-4 md:h-5 md:w-5" />
                         Join Family
                     </button>

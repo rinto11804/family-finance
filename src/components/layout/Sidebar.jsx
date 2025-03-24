@@ -10,11 +10,14 @@ import {
     HiCog6Tooth,
     HiArrowRightOnRectangle,
     HiClipboardDocumentList,
-    HiSquares2X2
+    HiSquares2X2,
+    HiChevronDown,
+    HiChevronRight
 } from 'react-icons/hi2';
 
 const Sidebar = () => {
     const [collapsed, setCollapsed] = useState(false);
+    const [expandedItems, setExpandedItems] = useState([]);
     const location = useLocation();
 
     const navigation = [
@@ -44,7 +47,7 @@ const Sidebar = () => {
                 {
                     name: 'Analytics',
                     icon: <HiChartBar className="w-5 h-5" />,
-                    path: '/analytics'
+                    path: '/analysis'
                 }
             ]
         },
@@ -52,9 +55,23 @@ const Sidebar = () => {
             title: 'Management',
             items: [
                 {
-                    name: 'Family Members',
+                    name: 'Family Management',
                     icon: <HiUserGroup className="w-5 h-5" />,
-                    path: '/family'
+                    path: '/family',
+                    subItems: [
+                        {
+                            name: 'Family Members',
+                            path: '/family/members'
+                        },
+                        {
+                            name: 'Create Family',
+                            path: '/family/create'
+                        },
+                        {
+                            name: 'Join Family',
+                            path: '/family/join'
+                        }
+                    ]
                 },
                 {
                     name: 'Events',
@@ -71,6 +88,68 @@ const Sidebar = () => {
     ];
 
     const isActive = (path) => location.pathname === path;
+    const isExpanded = (itemName) => expandedItems.includes(itemName);
+    const toggleExpand = (itemName) => {
+        setExpandedItems(prev =>
+            prev.includes(itemName)
+                ? prev.filter(item => item !== itemName)
+                : [...prev, itemName]
+        );
+    };
+
+    const renderNavItem = (item, index) => {
+        if (item.subItems) {
+            return (
+                <div key={index}>
+                    <button
+                        onClick={() => toggleExpand(item.name)}
+                        className={`flex items-center justify-between w-full px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive(item.path) || item.subItems.some(subItem => isActive(subItem.path))
+                                ? 'bg-primary text-primary-content'
+                                : 'hover:bg-base-200'
+                            }`}
+                    >
+                        <div className="flex items-center gap-3">
+                            {item.icon}
+                            {!collapsed && <span>{item.name}</span>}
+                        </div>
+                        {!collapsed && (
+                            isExpanded(item.name) ? <HiChevronDown className="w-4 h-4" /> : <HiChevronRight className="w-4 h-4" />
+                        )}
+                    </button>
+                    {!collapsed && isExpanded(item.name) && (
+                        <div className="ml-4 mt-1 space-y-1">
+                            {item.subItems.map((subItem, subIndex) => (
+                                <Link
+                                    key={subIndex}
+                                    to={subItem.path}
+                                    className={`flex items-center gap-3 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${isActive(subItem.path)
+                                            ? 'bg-primary/20 text-primary'
+                                            : 'hover:bg-base-200'
+                                        }`}
+                                >
+                                    <span>{subItem.name}</span>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        return (
+            <Link
+                key={index}
+                to={item.path}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive(item.path)
+                        ? 'bg-primary text-primary-content'
+                        : 'hover:bg-base-200'
+                    }`}
+            >
+                {item.icon}
+                {!collapsed && <span>{item.name}</span>}
+            </Link>
+        );
+    };
 
     return (
         <div
@@ -103,19 +182,7 @@ const Sidebar = () => {
                                 </h3>
                             )}
                             <div className="space-y-1">
-                                {group.items.map((item, index) => (
-                                    <Link
-                                        key={index}
-                                        to={item.path}
-                                        className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-colors ${isActive(item.path)
-                                                ? 'bg-primary text-primary-content'
-                                                : 'hover:bg-base-200'
-                                            }`}
-                                    >
-                                        {item.icon}
-                                        {!collapsed && <span>{item.name}</span>}
-                                    </Link>
-                                ))}
+                                {group.items.map((item, index) => renderNavItem(item, index))}
                             </div>
                         </div>
                     ))}

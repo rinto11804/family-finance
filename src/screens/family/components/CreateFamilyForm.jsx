@@ -1,6 +1,25 @@
-import { HiHome, HiUsers, HiMail, HiPhone } from 'react-icons/hi';
+import { useState } from 'react';
+import { HiHome, HiUsers } from 'react-icons/hi';
 
-const CreateFamilyForm = ({ familyName, setFamilyName, onSubmit }) => {
+const CreateFamilyForm = ({ onSubmit, loading }) => {
+    const [formData, setFormData] = useState({
+        familyName: '',
+        memberCount: 2
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSubmit(formData);
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: name === 'memberCount' ? parseInt(value) : value
+        }));
+    };
+
     return (
         <div className="card bg-base-100 shadow-lg w-full max-w-xl mx-auto h-fit max-h-[95vh] overflow-y-auto">
             <div className="card-body p-6 sm:p-8 md:px-12 md:py-10">
@@ -19,7 +38,7 @@ const CreateFamilyForm = ({ familyName, setFamilyName, onSubmit }) => {
                     </div>
                 </div>
 
-                <form onSubmit={onSubmit} className="space-y-4 md:space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6">
                     <div className="form-control w-full">
                         <label className="label px-1 pb-1">
                             <span className="label-text text-sm md:text-base font-medium">Family Name</span>
@@ -30,9 +49,13 @@ const CreateFamilyForm = ({ familyName, setFamilyName, onSubmit }) => {
                             </span>
                             <input
                                 type="text"
+                                name="familyName"
+                                value={formData.familyName}
+                                onChange={handleChange}
                                 placeholder="Enter family name"
                                 className="join-item input input-bordered w-full h-11 md:h-14"
                                 required
+                                disabled={loading}
                             />
                         </div>
                     </div>
@@ -45,20 +68,27 @@ const CreateFamilyForm = ({ familyName, setFamilyName, onSubmit }) => {
                             <span className="join-item bg-base-200 px-3 md:px-5 flex items-center">
                                 <HiUsers className="h-4 w-4 md:h-5 md:w-5 text-base-content/70" />
                             </span>
-                            <select className="join-item select select-bordered w-full h-11 md:h-14" defaultValue="">
-                                <option value="" disabled>Select number of members</option>
-                                {[2, 3, 4, 5, 6, 7, 8].map(num => (
-                                    <option key={num} value={num}>{num} members</option>
-                                ))}
-                                <option value="more">More than 8 members</option>
-                            </select>
+                            <input
+                                type="number"
+                                name="memberCount"
+                                value={formData.memberCount}
+                                onChange={handleChange}
+                                min="2"
+                                max="20"
+                                className="join-item input input-bordered w-full h-11 md:h-14"
+                                required
+                                disabled={loading}
+                            />
                         </div>
                     </div>
 
-
                     <div className="divider my-4 md:my-6"></div>
 
-                    <button type="submit" className="btn btn-primary w-full h-11 md:h-14 gap-2 text-sm md:text-base normal-case">
+                    <button 
+                        type="submit" 
+                        className={`btn btn-primary w-full h-11 md:h-14 gap-2 text-sm md:text-base normal-case ${loading ? 'loading' : ''}`}
+                        disabled={loading}
+                    >
                         <HiHome className="h-4 w-4 md:h-5 md:w-5" />
                         Create Family Space
                     </button>

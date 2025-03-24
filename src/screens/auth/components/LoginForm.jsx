@@ -1,18 +1,35 @@
 'use client'
 
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import Input from '../../../components/ui/input/Input'
 import Button from '../../../components/ui/button/Button'
+import { authService } from '../../../services/authService.js'
 
 function LoginForm() {
+    const navigate = useNavigate()
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     })
+    const [error, setError] = useState('')
+    const [loading, setLoading] = useState(false)
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log(formData)
+        setError('')
+        setLoading(true)
+
+        try {
+            // Remove any existing token before login
+            localStorage.removeItem('token')
+            await authService.login(formData)
+            navigate('/dashboard') // Redirect to dashboard after successful login
+        } catch (err) {
+            setError(err.response?.data?.message || 'Failed to login. Please try again.')
+        } finally {
+            setLoading(false)
+        }
     }
 
     const handleChange = (e) => {
@@ -25,6 +42,11 @@ function LoginForm() {
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
+            {error && (
+                <div className="alert alert-error">
+                    <span>{error}</span>
+                </div>
+            )}
             <div className="space-y-5">
                 <Input
                     label="Email"
@@ -61,8 +83,9 @@ function LoginForm() {
             <Button
                 type="submit"
                 className="w-full h-12 text-base font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+                disabled={loading}
             >
-                Sign in
+                {loading ? 'Signing in...' : 'Sign in'}
             </Button>
         </form>
     )
